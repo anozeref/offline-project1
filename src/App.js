@@ -1,12 +1,15 @@
 import logo from './logo.svg';
 import './App.css';
-import Navbar from './component/navbar'
+import { Navbar, Category, Hasil, Menu } from "./component";
 
-const App=() => {
+function App() {
   return (
-    <>
-    <Navbar/>
-    </>
+    <div>
+      <Navbar />
+      <Category />
+      <Menu />
+      <Hasil />
+    </div>
   );
 }
 

@@ -1,40 +1,31 @@
-import {useEffect, useState} from "react";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Card from "react-bootstrap/Card";
-import {API_URL} from "./utils/constant";
-import {FormatRupiah} from "./utils/utility";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { FormatRupiah } from "./utils/utility";
 
-function ProductList() {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    fetch(`${API_URL}/product`)
-      .then((res) => res.json())
-      .then((data) => setProducts(data))
-      .catch((err) => console.error("Gagal fetch:", err));
-  }, []);
-
+function ProductList({ products, tambahKeranjang }) {
   return (
     <Container>
-      <h2 className="my-4">Daftar Produk</h2>
-      <Row>
+      <Row xs={1} sm={2} md={3} lg={4} className="g-4">
         {products.map((item) => (
-          <Col key={item.id} sm={6} md={4} lg={3} className="mb-4">
-            <Card>
+          <Col key={item.id}>
+            <Card className="h-100 shadow-sm">
               <Card.Img
                 variant="top"
-                src={`/images/${item.gambar}`}
+                src={`/images/${item.category.nama.toLowerCase()}/${item.gambar}`}
                 alt={item.nama}
+                className="card-img-top"
               />
-              <Card.Body>
+              <Card.Body className="d-flex flex-column">
                 <Card.Title>{item.nama}</Card.Title>
-                <Card.Text>
-                  Harga: {FormatRupiah(item.harga)} <br />
-                  Kategori: {item.category.nama} <br />
-                  {item.is_ready ? "Tersedia" : "Habis"}
+                <Card.Text className="mb-3">
+                  Harga: {FormatRupiah(item.harga)}
                 </Card.Text>
+                <Button
+                  variant="primary"
+                  onClick={() => tambahKeranjang(item)}
+                  className="mt-auto"
+                >
+                  + Tambah
+                </Button>
               </Card.Body>
             </Card>
           </Col>

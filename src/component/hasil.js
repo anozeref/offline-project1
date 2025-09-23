@@ -3,7 +3,7 @@ import { Card, ListGroup, Button, Modal, Form, Image } from "react-bootstrap";
 import axios from "axios";
 import { API_URL } from "./utils/constant";
 
-export default function Hasil({ keranjangs, kurangiKeranjang, hapusKeranjang, setKeranjangs }) {
+export default function Hasil({ keranjangs, kurangiKeranjang, hapusKeranjang, setKeranjangs, fetchPesananList }) {
   const [showModal, setShowModal] = useState(false);
   const [atasNama, setAtasNama] = useState("");
 
@@ -36,9 +36,15 @@ export default function Hasil({ keranjangs, kurangiKeranjang, hapusKeranjang, se
     try {
       await axios.post(`${API_URL}/pesanan`, newOrder);
       alert("Pesanan berhasil disimpan!");
+
       setKeranjangs([]);   // kosongkan keranjang
       setAtasNama("");     // reset nama
       handleClose();       // tutup modal
+
+      // refresh App.js pesananList supaya modal grid terbaru tampil
+      if (typeof fetchPesananList === "function") {
+        fetchPesananList();
+      }
     } catch (err) {
       console.error("Gagal simpan pesanan:", err);
     }
@@ -97,7 +103,6 @@ export default function Hasil({ keranjangs, kurangiKeranjang, hapusKeranjang, se
           <ListGroup variant="flush" className="mb-3">
             {keranjangs.map((item) => (
               <ListGroup.Item key={item.product.id} className="d-flex align-items-center">
-                {/* Gambar Mini */}
                 <Image
                   src={`/images/${item.product.category.nama.toLowerCase()}/${item.product.gambar}`}
                   alt={item.product.nama}

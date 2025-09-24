@@ -97,7 +97,7 @@ function Home() {
               kurangiKeranjang={kurangiKeranjang}
               hapusKeranjang={hapusKeranjang}
               setKeranjangs={setKeranjangs}
-              fetchPesananList={fetchPesananList} // pass ke Hasil
+              fetchPesananList={fetchPesananList}
             />
           </Col>
         </Row>

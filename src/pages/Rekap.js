@@ -1,14 +1,17 @@
 import React, { Component } from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Modal, ListGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { API_URL } from "../utils/constants";
+import { numberWithCommas } from "../utils/utils";
 
 export default class Rekap extends Component {
   state = {
     pesanan: [],
     loading: true,
+    showModal: false,
+    selectedPesanan: null,
   };
 
   componentDidMount() {
@@ -19,11 +22,6 @@ export default class Rekap extends Component {
     axios.get(API_URL + "pesanan")
       .then(res => this.setState({ pesanan: res.data, loading: false }))
       .catch(err => this.setState({ loading: false }));
-  };
-
-  handleDetail = (pesanan) => {
-    const items = pesanan.menus.map(m => `${m.product.nama} x${m.jumlah}`).join("\n");
-    alert(`ID Pesanan: ${pesanan.id}\nTotal Bayar: Rp. ${pesanan.total_bayar}\nItems:\n${items}`);
   };
 
   formatTimestamp = (timestamp) => {
@@ -41,8 +39,16 @@ export default class Rekap extends Component {
     this.props.history.push("/");
   };
 
+  openModal = (pesanan) => {
+    this.setState({ showModal: true, selectedPesanan: pesanan });
+  };
+
+  closeModal = () => {
+    this.setState({ showModal: false, selectedPesanan: null });
+  };
+
   render() {
-    const { pesanan, loading } = this.state;
+    const { pesanan, loading, showModal, selectedPesanan } = this.state;
 
     if (loading) return <p className="text-center mt-5">Loading...</p>;
     if (pesanan.length === 0) return <p className="text-center mt-5">Belum ada pesanan</p>;
@@ -73,10 +79,10 @@ export default class Rekap extends Component {
               <Card className="shadow">
                 <Card.Body>
                   <Card.Title>ID Pesanan: {p.id}</Card.Title>
-                  <Card.Text>Total Bayar: Rp. {p.total_bayar}</Card.Text>
+                  <Card.Text>Total Bayar: Rp. {numberWithCommas(p.total_bayar)}</Card.Text>
                   <Card.Text>Jumlah Item: {p.menus.length}</Card.Text>
                   <Card.Text>Timestamp: {this.formatTimestamp(p.timestamp)}</Card.Text>
-                  <Button variant="primary" onClick={() => this.handleDetail(p)}>
+                  <Button variant="primary" onClick={() => this.openModal(p)}>
                     Detail
                   </Button>
                 </Card.Body>
@@ -84,6 +90,34 @@ export default class Rekap extends Component {
             </Col>
           ))}
         </Row>
+
+        {/* Modal Detail */}
+        <Modal show={showModal} onHide={this.closeModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Detail Pesanan {selectedPesanan?.id}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {selectedPesanan && (
+              <ListGroup>
+                {selectedPesanan.menus.map((m, idx) => (
+                  <ListGroup.Item key={idx}>
+                    {m.product.nama} x{m.jumlah} → Rp. {numberWithCommas(m.total_harga)}
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            )}
+            {selectedPesanan && (
+              <p className="mt-2">
+                <strong>Total Bayar: Rp. {numberWithCommas(selectedPesanan.total_bayar)}</strong>
+              </p>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.closeModal}>
+              Tutup
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </Container>
     );
   }

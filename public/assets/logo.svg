@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="carita.NA Rumah Makan logo">
+  <defs>
+    <style type="text/css"><![CDATA[
+      .brand { font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 700; fill: #0F172A; font-size: 36px; }
+      .tag { font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500; fill: #0F172A; font-size: 14px; letter-spacing: 2px; }
+      .circle { fill: #FF6A00; } /* orange */
+      .icon-stroke { fill: #ffffff; }
+    ]]></style>
+  </defs>
+
+  <!-- Left circular icon -->
+  <g transform="translate(60,100)">
+    <circle class="circle" cx="0" cy="0" r="48" />
+    <!-- Fork -->
+    <g transform="translate(-12,-24)">
+      <rect x="-2" y="18" width="8" height="36" rx="2" class="icon-stroke"/>
+      <!-- prongs -->
+      <rect x="-4" y="-18" width="2" height="14" rx="1" class="icon-stroke"/>
+      <rect x="0" y="-18" width="2" height="14" rx="1" class="icon-stroke"/>
+      <rect x="4" y="-18" width="2" height="14" rx="1" class="icon-stroke"/>
+    </g>
+    <!-- Spoon -->
+    <g transform="translate(18,-18)">
+      <ellipse cx="0" cy="0" rx="9" ry="12" class="icon-stroke"/>
+      <rect x="-2" y="6" width="4" height="48" rx="2" class="icon-stroke"/>
+    </g>
+  </g>
+
+  <!-- Text to the right -->
+  <g transform="translate(140,95)">
+    <text class="brand">CARITA.NA</text>
+    <text class="tag" y="30">RUMAH MAKAN</text>
+  </g>
+</svg>

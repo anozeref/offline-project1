@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Navbar, Container, Nav, Badge } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faClipboardList, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const NavbarComp = ({ notifStock, notifMessages, onClearKeranjang }) => {
-  // Tentukan warna badge: merah kalau ada habis, kuning kalau cuma menipis
+  const [showNotif, setShowNotif] = useState(false);
+  const notifRef = useRef();
+
+  const toggleNotif = () => setShowNotif(!showNotif);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setShowNotif(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const badgeColor = notifMessages.some(msg => msg.includes("habis")) ? "danger" : "warning";
 
   return (
@@ -14,21 +28,48 @@ const NavbarComp = ({ notifStock, notifMessages, onClearKeranjang }) => {
           <img src={process.env.PUBLIC_URL + "/assets/logo.svg"} width={200} alt="Logo" />
         </Navbar.Brand>
 
-        <Nav className="ms-auto">
-          {/* Notif stok */}
-          <Nav.Link href="#" onClick={() => alert(notifMessages.join("\n"))}>
+        <Nav className="ms-auto" style={{ position: "relative" }} ref={notifRef}>
+          <Nav.Link onClick={toggleNotif} style={{ position: "relative" }}>
             <FontAwesomeIcon icon={faBell} />
             {notifStock > 0 && (
               <Badge bg={badgeColor} pill className="ms-1">!</Badge>
             )}
           </Nav.Link>
 
-          {/* Rekap transaksi */}
+          {/* Sliding dropdown */}
+          <div
+            style={{
+              position: "absolute",
+              top: "40px",
+              right: 0,
+              width: "250px",
+              background: "#fff",
+              border: "1px solid #ddd",
+              borderRadius: "8px",
+              boxShadow: "0 2px 10px rgba(0,0,0,0.15)",
+              overflow: "hidden",
+              maxHeight: showNotif ? "500px" : "0",
+              opacity: showNotif ? 1 : 0,
+              transition: "all 0.3s ease",
+              zIndex: 1000,
+            }}
+          >
+            <div style={{ padding: showNotif ? "10px" : "0" }}>
+              {notifMessages.length === 0
+                ? <div>Tidak ada notifikasi baru</div>
+                : notifMessages.map((msg, idx) => (
+                    <div key={idx} style={{ padding: "5px 0", borderBottom: "1px solid #eee" }}>
+                      {msg}
+                    </div>
+                  ))
+              }
+            </div>
+          </div>
+
           <Nav.Link href="/rekap">
             <FontAwesomeIcon icon={faClipboardList} />
           </Nav.Link>
 
-          {/* Clear keranjang */}
           <Nav.Link onClick={onClearKeranjang}>
             <FontAwesomeIcon icon={faTrash} />
           </Nav.Link>

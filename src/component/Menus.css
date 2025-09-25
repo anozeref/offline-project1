@@ -3,6 +3,10 @@
   transform: translateY(20px);
   animation: fadeInUp 0.5s forwards;
 }
+.inactive-card {
+  pointer-events: none; /* cegah klik */
+  filter: grayscale(80%); /* kasih efek abu-abu */
+}
 
 @keyframes fadeInUp {
   to {

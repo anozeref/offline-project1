@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Navbar, Container, Nav, Badge } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faClipboardList, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faClipboardList, faTrash, faBoxesStacked } from "@fortawesome/free-solid-svg-icons";
 
 const NavbarComp = ({ notifStock, notifMessages, onClearKeranjang }) => {
   const [showNotif, setShowNotif] = useState(false);
@@ -68,6 +68,10 @@ const NavbarComp = ({ notifStock, notifMessages, onClearKeranjang }) => {
 
           <Nav.Link href="/rekap">
             <FontAwesomeIcon icon={faClipboardList} />
+          </Nav.Link>
+          {/* New Manage Stock link */}
+          <Nav.Link href="/ManageStock">
+            <FontAwesomeIcon icon={faBoxesStacked} />
           </Nav.Link>
 
           <Nav.Link onClick={onClearKeranjang}>
